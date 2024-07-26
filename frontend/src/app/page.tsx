@@ -5,7 +5,7 @@ import { HeroVideo } from "@/component/HeroVideo";
 export default function Home() {
   return (
     <main className="someClass border mb-12">
-      <AppBar/>
+      <AppBar isMain={true}/>
       <Hero/>
       <div className="pt-8 ">
         <HeroVideo />

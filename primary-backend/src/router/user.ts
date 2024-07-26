@@ -60,7 +60,7 @@ router.post("/signin",async (req,res)=>{
 
     if(!user){
         return res.status(403).json({
-            message:"user already exists"
+            message:"user not found or invalid credentials"
         })
     }
 

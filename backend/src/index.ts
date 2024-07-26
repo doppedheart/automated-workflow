@@ -31,7 +31,7 @@ app.post('/hooks/catch/:userId/:zapId',async (req,res)=>{
         message:"webhook received"
     })
 })
-const PORT=8080
+const PORT=3001
 app.listen(PORT,()=>{
     console.log("server is listening on port ",PORT)
 })

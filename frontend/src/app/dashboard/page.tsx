@@ -1,17 +1,9 @@
-"use client";"use client"
+"use client";
 import * as React from "react"
 import {
     ColumnDef,
-    ColumnFiltersState,
-    SortingState,
-    VisibilityState,
     flexRender,
     getCoreRowModel,
-    getFacetedRowModel,
-    getFacetedUniqueValues,
-    getFilteredRowModel,
-    getPaginationRowModel,
-    getSortedRowModel,
     useReactTable,
   } from "@tanstack/react-table"
 import {
@@ -27,8 +19,10 @@ import { AppBar } from "@/component/AppBar";
 import { DarkButton } from "@/component/buttons/DarkButton";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import { BACKEND_URL } from "@/config";
-import { Divide } from "lucide-react";
+import { BACKEND_URL, HOOK_URL } from "@/config";
+import Image from "next/image";
+import { LinkButton } from "@/component/buttons/LinkButton";
+
 
 interface Zap{
     "id": string,
@@ -37,22 +31,13 @@ interface Zap{
     "actions": [
         {
             "id": string,
-            "zapId": string,
-            "actionId": string,
-            "sortingOrder": number,
-            "type": {
-                "id": string,
-                "name": string
-            }
-        },
-        {
-            "id": string,
             "zapId": string
             "actionId": string,
             "sortingOrder":number,
             "type": {
                 "id": string,
-                "name": string
+                "name": string,
+                "image":string,
             }
         }
     ],
@@ -62,11 +47,63 @@ interface Zap{
         "triggerId": string,
         "type": {
             "id": string,
-            "name": string
+            "name": string,
+            "image":string,
         }
     }
 }
 const columns : ColumnDef<Zap>[]=[
+    {
+        id: "name",
+        header:"webFlow",
+        cell:({row})=>{
+            const value=row.original;
+            return (
+                <div className="flex ">
+                    <Image src={value.trigger.type.image} alt={"trigger"} width={30} height={30}/> 
+                    {value.actions.map(z=><Image src={z.type.image} alt="action" width={30} height={30}/>)}
+                </div>
+            )
+        },
+    },{
+        id: "id",
+        header:"ID",
+        cell:({row})=>{
+            const value =row.original
+            return (
+                <div>{value.id}</div>
+            )
+        },
+    },{
+        id: "createdAt",
+        header:"Created At",
+        cell:()=>{
+            return (
+                <div>Nov 13, 2024</div>
+            )
+        },
+    },{
+        id: "webhook",
+        header:"webhook url",
+        cell:({row})=>{
+            const value =row.original
+            return (
+                <div>{`${HOOK_URL}/hooks/catch/1/${value.id}`}</div>
+            )
+        },
+    },{
+        id: "Go",
+        header:"Go",
+        cell:({row})=>{
+            const router = useRouter();
+            const value =row.original;
+            return (
+                <div><LinkButton onClick={()=>{
+                    router.push("/zap/"+value.id)
+                }}>Go</LinkButton></div>
+            )
+        },
+    },
 ]
 
 function useZaps(){
@@ -129,7 +166,7 @@ export function DataTable<TData, TValue>({
   })
 
   return (
-    <div className="space-y-4">
+    <div className="mt-12 max-w-screen-lg">
       <div className="rounded-md border">
         <Table>
           <TableHeader>
