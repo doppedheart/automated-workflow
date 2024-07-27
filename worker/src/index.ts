@@ -1,5 +1,10 @@
+require('dotenv').config();
 import {PrismaClient} from "@prisma/client";
+import { JsonObject } from "@prisma/client/runtime/library";
 import {Kafka} from "kafkajs";
+import { parse } from "./parser";
+import {sendEmail} from "./email";
+
 const TOPIC_NAME="zap-events"
 const prismaClient = new PrismaClient();
 
@@ -12,6 +17,7 @@ async function main(){
     await consumer.connect();
     const producer = kafka.producer();
     await producer.connect();
+
     await consumer.subscribe({topic:TOPIC_NAME,fromBeginning:true})
     
     await consumer.run({
@@ -50,13 +56,20 @@ async function main(){
                 console.log("current action not found");
                 return;
             }
+            const zapRunMetadata = zapRunDetails?.metadata;
+
             if(currentAction.type.id === "email"){
-                console.log("sending out an email")
+                const body = parse((currentAction.metadata as JsonObject)?.body as string,zapRunMetadata);
+                const to = parse((currentAction.metadata as JsonObject)?.email as string,zapRunMetadata);
+                console.log(`sending out email to ${to} body is ${body}`)
+                await sendEmail(to,body);
             }
 
             if(currentAction.type.id === "solana"){
                 console.log("sending out sol")
             }  
+            await new Promise(r => setTimeout(r,500));
+
             const lastStage = (zapRunDetails?.zap.actions?.length || 1) -1;
             if(lastStage !== stage){
                 await producer.send({
@@ -70,7 +83,7 @@ async function main(){
                 })
             }
 
-
+            console.log("processing done");
             await consumer.commitOffsets([{
                 topic:TOPIC_NAME,
                 partition:partition,
