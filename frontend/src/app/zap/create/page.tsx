@@ -193,6 +193,13 @@ function Modal({
                             })
                         }}
                     />}
+                    {step ===1 && selectedAction?.id == "ethereum" && <EthereumSelector setMetadata={(metadata)=>{
+                            setSelect({
+                                ...selectedAction,
+                                metadata
+                            })
+                        }}
+                    />}
                     {step === 0 && <div>
                         {availableItems.map(({id,name,image})=>{
                             return (
@@ -249,6 +256,26 @@ function EmailSelector({setMetadata}: {
 }
 
 function SolanaSelector({setMetadata}: {
+    setMetadata: (params: any) => void;
+}) {
+    const [amount, setAmount] = useState("");
+    const [address, setAddress] = useState("");    
+
+    return <div>
+        <Input label={"To"} type={"text"} placeholder="To" onChange={(e) => setAddress(e.target.value)}></Input>
+        <Input label={"Amount"} type={"text"} placeholder="To" onChange={(e) => setAmount(e.target.value)}></Input>
+        <div className="pt-4">
+        <PrimaryButton onClick={() => {
+            setMetadata({
+                amount,
+                address
+            })
+        }}>Submit</PrimaryButton>
+        </div>
+    </div>
+}
+
+function EthereumSelector({setMetadata}:{
     setMetadata: (params: any) => void;
 }) {
     const [amount, setAmount] = useState("");

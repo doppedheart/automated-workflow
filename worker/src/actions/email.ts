@@ -1,5 +1,5 @@
 import nodemailer from "nodemailer"
-import { SMTP_ENDPOINT, SMTP_PASSWORD, SMTP_USERNAME } from "./config"
+import { SMTP_ENDPOINT, SMTP_PASSWORD, SMTP_USERNAME } from "../config"
 
 
 

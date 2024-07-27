@@ -3,7 +3,8 @@ import {PrismaClient} from "@prisma/client";
 import { JsonObject } from "@prisma/client/runtime/library";
 import {Kafka} from "kafkajs";
 import { parse } from "./parser";
-import {sendEmail} from "./email";
+import {sendEmail} from "./actions/email";
+import { sendEth } from "./actions/ethereum";
 
 const TOPIC_NAME="zap-events"
 const prismaClient = new PrismaClient();
@@ -67,6 +68,12 @@ async function main(){
 
             if(currentAction.type.id === "solana"){
                 console.log("sending out sol")
+            }  
+            if(currentAction.type.id === "ethereum"){
+                const address = parse((currentAction.metadata as JsonObject)?.address as string,zapRunMetadata);
+                const amount = parse((currentAction.metadata as JsonObject)?.amount as string,zapRunMetadata);
+                console.log(`sending ${amount} Eth to ${address} `)
+                await sendEth(address,amount);
             }  
             await new Promise(r => setTimeout(r,500));
 

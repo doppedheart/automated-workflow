@@ -26,6 +26,13 @@ async function main(){
             image:"https://s3.coinmarketcap.com/static-gravity/image/5cc0b99a8dd84fbfa4e150d84b5531f2.png"
         }
     })
+    await prismaClient.availableAction.create({
+        data:{
+            id:"ethereum",
+            name:"Ethereum",
+            image:"https://upload.wikimedia.org/wikipedia/commons/0/01/Ethereum_logo_translucent.svg"
+        }
+    })
 }
 
 main();
