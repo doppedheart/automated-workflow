@@ -1,0 +1,19 @@
+FROM node:20-alpine
+WORKDIR /backend
+
+COPY primary-backend/package.json .
+COPY primary-backend/package-lock.json .
+
+RUN apk add --no-cache netcat-openbsd
+RUN npm install
+
+COPY primary-backend .
+COPY entrypoint.sh .
+
+ENV DATABASE_URL="postgresql://postgres:mysecretpassword@db:5432/postgres"
+
+RUN chmod +x entrypoint.sh
+
+EXPOSE 5000 
+
+CMD ["./entrypoint.sh"]
