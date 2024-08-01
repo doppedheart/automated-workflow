@@ -36,6 +36,44 @@ services:
       timeout: 5s
       retries: 5
 
+  kafka:
+    image: apache/kafka:3.7.1
+    ports:
+      - "9092:9092"
+    volumes:
+      - kafka-data:/kafka
+      - ./kafka-entrypoint.sh:/kafka-entrypoint.sh
+    command: 
+      - /bin/bash
+      - /kafka-entrypoint.sh
+
+  processor:
+    build:
+      dockerfile: docker/Dockerfile.processor
+      context: .
+    depends_on:
+      - kafka
+      - db
+
+  worker:
+    build:
+      dockerfile: docker/Dockerfile.worker
+      context: .
+    depends_on:
+      - kafka
+      - db
+    
+  hooks:
+    build:
+      dockerfile: docker/Dockerfile.hooks
+      context: .
+    ports:
+      - "3001:3001"
+    depends_on:
+      db:
+        condition: service_healthy
+  
 
 volumes:
   postgres-data:
+  kafka-data:

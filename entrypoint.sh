@@ -8,7 +8,7 @@ done
 
 # Run database migrations and seeding
 npm run prisma:migrate
-npm run db:seed
+npm run reset-seed
 
 # Start the application
 npm run start

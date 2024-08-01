@@ -5,7 +5,7 @@ const client = new PrismaClient();
 
 const kafka = new Kafka({
     clientId:"outbox-processor",
-    brokers:['localhost:9092']
+    brokers:['kafka:9092']
 })
 async function main(){
     const producer = kafka.producer();

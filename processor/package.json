@@ -4,9 +4,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev":"tsx watch ./src/index.ts",
-    "start":"tsc -b && node dist/index.js",
-    "prisma:generate":"prisma generate"
+    "dev": "tsx watch ./src/index.ts",
+    "start": "tsc -b && node dist/index.js",
+    "prisma:generate": "prisma generate"
   },
   "keywords": [],
   "author": "",
@@ -15,6 +15,7 @@
   "dependencies": {
     "@prisma/client": "^5.16.2",
     "kafkajs": "^2.2.4",
-    "prisma": "^5.16.2"
+    "prisma": "^5.16.2",
+    "typescript": "^5.5.4"
   }
 }

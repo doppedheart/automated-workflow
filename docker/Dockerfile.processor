@@ -1,0 +1,16 @@
+FROM node:20-alpine
+
+WORKDIR /processor
+
+COPY processor/package.json .
+COPY processor/package-lock.json .
+
+RUN npm install
+
+COPY processor .
+
+ENV DATABASE_URL="postgresql://postgres:mysecretpassword@db:5432/postgres"
+
+RUN npm run prisma:generate
+
+CMD ["npm","run","start"]
